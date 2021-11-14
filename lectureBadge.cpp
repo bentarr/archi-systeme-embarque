@@ -1,9 +1,9 @@
-#include <unistd.h>
-#include <wiringPi.h>
 #include <iostream>
-#include "libs/MFRC522.h"
+#include <unistd.h>
 #include "libs/i2cControl.hpp"
 #include "libs/lcdDriver.hpp"
+#include "libs/MFRC522.h"
+#include "libs/wiringPi/wiringPi.h"
 
 #define RED 7
 #define GREEN 0
