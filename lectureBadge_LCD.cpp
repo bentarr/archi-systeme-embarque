@@ -1,13 +1,13 @@
-#include <iostream>
 #include <unistd.h>
+#include <wiringPi.h>
+#include <iostream>
+#include "libs/MFRC522.h"
 #include "libs/i2cControl.hpp"
 #include "libs/lcdDriver.hpp"
-#include "libs/MFRC522.h"
-#include "libs/wiringPi/wiringPi.h"
 
 #define RED 7
 #define GREEN 0
-
+#define lcdAddress 0x27
 
 void greenLedUp()
 {
@@ -64,12 +64,38 @@ void blinkLedResult(bool checkResult)
         blinkRedLed(3);
 }
 
+void printResultLCD(LcdDriver lcd, bool checkResult)
+{
+    lcd.clearColumnsRowCol(1, 16, 0);
+    lcd.clearColumnsRowCol(2, 16, 0);
+    if (checkResult) {
+	lcd.lcdSendCommand(LCD_BEG_LINE_1);
+	lcd.lcdString("Badge OK");
+    } else {
+	lcd.lcdSendCommand(LCD_BEG_LINE_1);
+	lcd.lcdString("Badge KO");
+    }
+}
+
+void waitingBadgeMessage(LcdDriver lcd)
+{
+    lcd.clearColumnsRowCol(1, 16, 0);
+    lcd.clearColumnsRowCol(2, 16, 0);
+    lcd.lcdSendCommand(LCD_BEG_LINE_1);
+    lcd.lcdString("En attente d'un");
+    lcd.lcdSendCommand(LCD_BEG_LINE_2);
+    lcd.lcdString("badge...");
+}
+
 bool lectureBadge()
 {
+    I2cControl *i2c = new I2cControl(1);
+    LcdDriver lcd(lcdAddress, i2c);
     MFRC522 mfrc;
     mfrc.PCD_Init();
     bool checkResult = true;
     int badgeConnu[20] = {150, 217, 162, 37, 200};
+    waitingBadgeMessage(lcd);
 
     while (1)
     {
@@ -86,8 +112,10 @@ bool lectureBadge()
                 break;
             }
         }
+	printResultLCD(lcd, checkResult);
         blinkLedResult(checkResult);
         usleep(1000000);
+	waitingBadgeMessage(lcd);
     }
 }
 
