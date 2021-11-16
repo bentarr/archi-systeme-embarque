@@ -69,11 +69,11 @@ void printResultLCD(LcdDriver lcd, bool checkResult)
     lcd.clearColumnsRowCol(1, 16, 0);
     lcd.clearColumnsRowCol(2, 16, 0);
     if (checkResult) {
-	lcd.lcdSendCommand(LCD_BEG_LINE_1);
-	lcd.lcdString("Badge OK");
+        lcd.lcdSendCommand(LCD_BEG_LINE_1);
+        lcd.lcdString("Badge OK");
     } else {
-	lcd.lcdSendCommand(LCD_BEG_LINE_1);
-	lcd.lcdString("Badge KO");
+        lcd.lcdSendCommand(LCD_BEG_LINE_1);
+        lcd.lcdString("Badge KO");
     }
 }
 
@@ -112,10 +112,9 @@ bool lectureBadge()
                 break;
             }
         }
-	printResultLCD(lcd, checkResult);
+        printResultLCD(lcd, checkResult);
         blinkLedResult(checkResult);
-        usleep(1000000);
-	waitingBadgeMessage(lcd);
+        waitingBadgeMessage(lcd);
     }
 }
 
